@@ -212,6 +212,12 @@ class Tableau extends Phaser.Scene {
 
         this.physics.add.collider(this.balle,this.raquette);
 
+        this.physics.add.collider(this.murGauche,this.raquette, function(){
+            me.rebond(me.raquette);
+        });
+
+        this.physics.add.collider(this.murGauche,this.raquette);
+
 
 
         this.joueurGauche = new Joueur('Joueur','joueurGauche');
@@ -249,7 +255,7 @@ class Tableau extends Phaser.Scene {
         this.balle.setVelocityX(0)
 
         this.balle.setVelocityX(Math.random()>0.5?-100:100)
-        this.balle.setVelocityY(0)
+        this.balle.setVelocityY(300)
     }
 
     win(joueur){
