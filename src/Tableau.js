@@ -4,7 +4,6 @@ class Tableau extends Phaser.Scene {
         this.load.image('cercle', 'assets/cercle.png');
         this.load.image('carre', 'assets/carre.png');
 
-        this.load.audio('applause', 'assets/son/applause.mp3')
 
 
     }
@@ -14,18 +13,15 @@ class Tableau extends Phaser.Scene {
         this.hauteur=800;
         this.largeur=800;
 
-        //Son
-        this.applause= this.sound.add('applause', {loop: false});
-        this.applause.volume = 1
 
 
         //Balle
         this.balle = this.physics.add.sprite(this.largeur/2, this.hauteur/2, 'cercle').setOrigin(0, 0);
         this.balle.setDisplaySize(20,20);
-        this.balle.body.setBounce(1.1,1.1);
+        this.balle.body.setBounce(1.2,1.1);
         this.balle.setVelocityX(Phaser.Math.Between(-600,600));
-        this.balle.setVelocityY(Phaser.Math.Between(300,350));
-        this.balle.body.setMaxVelocityX(500);
+        this.balle.setVelocityY(Phaser.Math.Between(-300,350));
+        this.balle.body.setMaxVelocityX(200);
         this.balle.body.setMaxVelocityY(700);
         this.balle.body.setAllowGravity(false)
 
@@ -50,6 +46,7 @@ class Tableau extends Phaser.Scene {
 
         this.brique1 = this.physics.add.sprite(120, 200,'carre').setOrigin(0, 0);
         this.brique1.setDisplaySize(60,30);
+        this.brique1.body.immovable = true;
         this.brique2 = this.physics.add.sprite(181, 200,'carre').setOrigin(0, 0);
         this.brique2.setDisplaySize(60,30);
         this.brique3 = this.physics.add.sprite(242, 200,'carre').setOrigin(0, 0);
@@ -153,10 +150,11 @@ class Tableau extends Phaser.Scene {
 
         //Collision
         this.physics.add.collider(this.balle,this.murGauche);
+        this.physics.add.collider(this.balle,this.murDroit);
         this.physics.add.collider(this.balle,this.haut);
 
         //Raquettes balle/murs
-        this.raquette = this.physics.add.sprite(700, 200,'carre').setOrigin(0, 0);
+        this.raquette = this.physics.add.sprite(300, 750,'carre').setOrigin(0, 0);
         this.raquette.setDisplaySize(200,20);
         this.raquette.setVelocityY(0);
         this.raquette.body.setAllowGravity(false);
@@ -189,20 +187,16 @@ class Tableau extends Phaser.Scene {
 
         let me=this;
 
-        console.log(raquette.y)
-        console.log(me.balle.y)
-        console.log((me.balle.y)-(raquette.y))
+        let largeurRaquette = raquette.displayHeight;
 
-        let hauteurRaquette = raquette.displayHeight;
+        let positionRelativeRaquette =(this.balle.x-raquette.x);
 
-        let positionRelativeRaquette =(this.balle.y-raquette.y);
-
-        positionRelativeRaquette = (positionRelativeRaquette/hauteurRaquette);
+        positionRelativeRaquette = (positionRelativeRaquette/largeurRaquette);
 
         positionRelativeRaquette = (positionRelativeRaquette*2-1);
         console.log(positionRelativeRaquette);
 
-        this.balle.setVelocityY( this.balle.body.velocity.y + positionRelativeRaquette * hauteurRaquette)
+        this.balle.setVelocityX( this.balle.body.velocity.x + positionRelativeRaquette * largeurRaquette)
     }
 
     balleAucentre(){
@@ -210,8 +204,8 @@ class Tableau extends Phaser.Scene {
         this.balle.y = this.hauteur/2
         this.balle.setVelocityX(0)
 
-        this.balle.setVelocityY(Math.random()>0.5?-100:100)
-        this.balle.setVelocityX(0)
+        this.balle.setVelocityX(Math.random()>0.5?-100:100)
+        this.balle.setVelocityY(0)
     }
 
     win(joueur){
@@ -219,7 +213,6 @@ class Tableau extends Phaser.Scene {
         joueur.score ++;
         //alert('Le score est de '+this.joueurGauche.score+' a '+this.joueur.score)
         this.balleAucentre();
-        this.applause.play()
     }
 
     initKeyboard() {
@@ -238,12 +231,12 @@ class Tableau extends Phaser.Scene {
         this.input.keyboard.on('keydown', function (kevent) {
             switch (kevent.keyCode) {
                 case Phaser.Input.Keyboard.KeyCodes.S:
-                    me.raquette.setVelocityX(-300);
+                    me.raquette.setVelocityX(300);
 
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.X:
 
-                    me.raquette.setVelocityX(300);
+                    me.raquette.setVelocityX(-300);
 
                     break;
             }
@@ -251,12 +244,7 @@ class Tableau extends Phaser.Scene {
     }
     update() {
 
-        if(this.raquette.x<this.murDroit.y+20){
-            this.gauche.x=this.murDroit.y+20
-        }
-        if(this.raquette.x>this.murGauche.y-100){
-            this.raquette.x=this.murGauche.y-100
-        }
+
 
 
         if(this.balle.x>this.largeur){
