@@ -170,7 +170,7 @@ class Tableau extends Phaser.Scene {
 
 
 
-        this.joueurGauche = new Joueur('Jean-Mi','joueurGauche');
+        this.joueurGauche = new Joueur('Joueur','joueurGauche');
 
 
         this.balleAucentre();
