@@ -156,7 +156,7 @@ class Tableau extends Phaser.Scene {
         this.physics.add.collider(this.balle,this.haut);
 
         //Raquettes balle/murs
-        this.raquette = this.physics.add.sprite(500, 200,'carre').setOrigin(0, 0);
+        this.raquette = this.physics.add.sprite(700, 200,'carre').setOrigin(0, 0);
         this.raquette.setDisplaySize(200,20);
         this.raquette.setVelocityY(0);
         this.raquette.body.setAllowGravity(false);
@@ -165,7 +165,6 @@ class Tableau extends Phaser.Scene {
         let me = this;
         //Collision raquettes/balle
         this.physics.add.collider(this.balle,this.raquette, function(){
-            console.log("touche raquette");
             me.rebond(me.raquette);
         });
 
@@ -239,12 +238,12 @@ class Tableau extends Phaser.Scene {
         this.input.keyboard.on('keydown', function (kevent) {
             switch (kevent.keyCode) {
                 case Phaser.Input.Keyboard.KeyCodes.S:
-                    me.raquette.setVelocityY(-300);
+                    me.raquette.setVelocityX(-300);
 
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.X:
 
-                    me.raquette.setVelocityY(300);
+                    me.raquette.setVelocityX(300);
 
                     break;
             }
@@ -252,11 +251,11 @@ class Tableau extends Phaser.Scene {
     }
     update() {
 
-        if(this.raquette.y<this.haut.y+20){
-            this.gauche.y=this.haut.y+20
+        if(this.raquette.x<this.murDroit.y+20){
+            this.gauche.x=this.murDroit.y+20
         }
-        if(this.raquette.y>this.murGauche.y-100){
-            this.raquette.y=this.murGauche.y-100
+        if(this.raquette.x>this.murGauche.y-100){
+            this.raquette.x=this.murGauche.y-100
         }
 
 
